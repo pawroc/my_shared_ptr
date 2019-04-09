@@ -10,43 +10,50 @@ namespace shared_ptr
 template <class T>
 class shared_ptr final
 {
-using ref_cout = size_t*;
-
 public:
-    shared_ptr(T* ptr)
-    {
-        if (use_count == nullptr)
-        {
-            std::cout << "Creating first shared_ptr\n";
-            pointee = ptr;
-            use_count = new size_t;
-            *use_count = 1;
-        }
-        else
-        {
-            ++(*use_count);
-            std::cout << "Creating another shared_ptr. use_count = " << *use_count << '\n';
-        }
-    }
+   explicit shared_ptr(T* ptr)
+   {
+      if (ref_count == nullptr)
+      {
+         pointee = ptr;
+         try
+         {
+            ref_count = new size_t(1);
+         }
+         catch(std::bad_alloc)
+         {
+            delete ref_count;
+            throw; // rethrow std::bad_alloc further
+         }
+      }
+   }
 
-    ~shared_ptr()
-    {
-        std::cout << "Destroying [" << *use_count << "] object.\n"; 
-        --(*use_count);
-        if (*use_count == 0)
-        {
-            std::cout << "Destroying last shared_ptr.\n ";
-            delete use_count;
-            use_count = nullptr;
+   shared_ptr(const shared_ptr& orig)
+   {
+      std::cout << "orig.pointee = " << orig.pointee << ", orig.ref_count = " << *orig.ref_count << std::endl;
+   }
 
-            delete pointee;
-            pointee = nullptr;
-        }
-    }
+   ~shared_ptr()
+   {
+      --(*ref_count);
+      if (*ref_count == 0)
+      {
+         delete ref_count;
+         ref_count = nullptr;
+
+         delete pointee;
+         pointee = nullptr;
+      }
+   }
+
+   size_t use_count() const
+   {
+      return *ref_count;
+   }
 
 private:
-    T* pointee{nullptr};
-    ref_cout use_count{nullptr}; 
+   T* pointee{nullptr};
+   size_t* ref_count{nullptr}; 
 };
 } // namespace shared_ptr
 } // namespace my
