@@ -30,7 +30,13 @@ public:
 
    shared_ptr(const shared_ptr& orig)
    {
-      std::cout << "orig.pointee = " << orig.pointee << ", orig.ref_count = " << *orig.ref_count << std::endl;
+      if (this == &orig)
+      {
+          return;
+      }
+      pointee = orig.pointee;
+      ref_count = orig.ref_count;
+      ++(*ref_count);
    }
 
    ~shared_ptr()
