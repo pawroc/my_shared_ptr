@@ -73,6 +73,26 @@ TEST(SharedPtr, destructor_afterDeletionOfOneCopy_useCountShouldBeDerceased)
     EXPECT_EQ(mySharedPtr.use_count(), 1);
 }
 
+TEST(SharedPtr, aaaaa) 
+{
+   std::shared_ptr<Foo> origSharedPtr(new Foo);
+   std::shared_ptr<Foo> origSharedPtr2 = origSharedPtr;
+   std::shared_ptr<Foo> origSharedPtr3(new Foo);
+
+    origSharedPtr3 = origSharedPtr;
+    EXPECT_EQ(origSharedPtr3.use_count(), origSharedPtr.use_count());
+    EXPECT_EQ(origSharedPtr3.use_count(), 3);
+
+   my::shared_ptr::shared_ptr<Foo> mySharedPtr(new Foo);
+   my::shared_ptr::shared_ptr<Foo> mySharedPtr2 = mySharedPtr;
+   my::shared_ptr::shared_ptr<Foo> mySharedPtr3(new Foo);
+
+    mySharedPtr3 = mySharedPtr;
+    EXPECT_EQ(mySharedPtr3.use_count(), mySharedPtr.use_count());
+    EXPECT_EQ(mySharedPtr3.use_count(), 3);
+}
+
+
 int main(int argc, char **argv) {
    ::testing::InitGoogleTest(&argc, argv); 
    return RUN_ALL_TESTS();

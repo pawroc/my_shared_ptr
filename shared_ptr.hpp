@@ -36,20 +36,56 @@ public:
       }
       pointee = orig.pointee;
       ref_count = orig.ref_count;
-      ++(*ref_count);
+      if (ref_count != nullptr)
+      {
+        ++(*ref_count);
+      }
+   }
+
+   shared_ptr& operator=(const shared_ptr& orig)
+   {
+       if (this == &orig)
+       {
+           return *this;
+       }
+
+       if (ref_count)
+       {
+           if (*ref_count > 1)
+           {
+               --(*ref_count);
+           }
+           else
+           {
+               delete ref_count;
+               ref_count = nullptr;
+
+               delete pointee;
+               pointee = nullptr;
+           }
+       }
+
+       ref_count = orig.ref_count;
+       pointee = orig.pointee;
+       ++(*ref_count);
+
+       return *this;
    }
 
    ~shared_ptr()
    {
-      --(*ref_count);
-      if (*ref_count == 0)
-      {
-         delete ref_count;
-         ref_count = nullptr;
+       if (ref_count)
+       {
+            --(*ref_count);
+            if (*ref_count == 0)
+            {
+                delete ref_count;
+                ref_count = nullptr;
 
-         delete pointee;
-         pointee = nullptr;
-      }
+                delete pointee;
+                pointee = nullptr;
+            }
+       }
    }
 
    size_t use_count() const
