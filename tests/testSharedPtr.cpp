@@ -12,6 +12,7 @@ namespace // anonymous
 struct Foo
 {
    Foo() { std::cout << "Foo() ctor\n"; }
+   Foo(const Foo&) { std::cout << "Foo() copy ctor\n"; }
    ~Foo() { std::cout << "\t~Foo() dtor\n"; }
 };
 } // anonymous namespace
@@ -73,7 +74,7 @@ TEST(SharedPtr, destructor_afterDeletionOfOneCopy_useCountShouldBeDerceased)
     EXPECT_EQ(mySharedPtr.use_count(), 1);
 }
 
-TEST(SharedPtr, aaaaa) 
+TEST(SharedPtr, assignmentOperator) 
 {
    std::shared_ptr<Foo> origSharedPtr(new Foo);
    std::shared_ptr<Foo> origSharedPtr2 = origSharedPtr;

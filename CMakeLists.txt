@@ -52,6 +52,8 @@ else()
                          )
 endif()
 
+option(UNIT_TEST "Enable ynit tests" TRUE)
+
 project(shared_ptr LANGUAGES C CXX)
 
 add_library(shared_ptr INTERFACE)
